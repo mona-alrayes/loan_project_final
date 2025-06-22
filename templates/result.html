@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container result">
+    <h2>Loan Application Result</h2>
+
+    <div class="result-card {% if application.prediction == 'Approved' %}approved{% else %}rejected{% endif %}">
+        <h3>Status: {{ application.prediction }}</h3>
+        <p>Confidence: {{ (application.probability * 100)|round(2) }}%</p>
+        <p>Application ID: {{ application.id }}</p>
+
+        <div class="details">
+            <p><strong>Applicant:</strong> {{ application.applicant_name }}</p>
+            <p><strong>Loan Amount:</strong> ${{ application.loan_amount|round(2) }}</p>
+            <p><strong>Term:</strong> {{ application.loan_amount_term }} months</p>
+        </div>
+    </div>
+
+    <!-- Model Performance Section -->
+    <div class="metrics">
+        <h3>Model Performance Metrics</h3>
+
+        <div class="metrics-container">
+            <div class="metric-card">
+                <h4>Best Model ({{ metrics.last_updated.strftime('%Y-%m-%d') }})</h4>
+                <div class="metric-row">
+                    <span class="metric-label">Accuracy:</span>
+                    <span class="metric-value">{{ (metrics.accuracy * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Precision:</span>
+                    <span class="metric-value">{{ (metrics.precision * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Recall:</span>
+                    <span class="metric-value">{{ (metrics.recall * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">F1 Score:</span>
+                    <span class="metric-value">{{ (metrics.f1_score * 100)|round(2) }}%</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h4>Random Forest Model</h4>
+                <div class="metric-row">
+                    <span class="metric-label">Accuracy:</span>
+                    <span class="metric-value">{{ (metrics.rf_accuracy * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Precision:</span>
+                    <span class="metric-value">{{ (metrics.rf_precision * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Recall:</span>
+                    <span class="metric-value">{{ (metrics.rf_recall * 100)|round(2) }}%</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">F1 Score:</span>
+                    <span class="metric-value">{{ (metrics.rf_f1 * 100)|round(2) }}%</span>
+                </div>
+                <!-- EDA report link -->
+                <div class="report-link">
+                    <a href="/eda-report" target="_blank" class="btn report-btn">
+                        View Detailed Analytics Report
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="/" class="btn">Back to Home</a>
+        <a href="/apply" class="btn secondary">New Application</a>
+    </div>
+</div>
+{% endblock %}

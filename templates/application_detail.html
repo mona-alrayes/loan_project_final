@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Application Details</h2>
+    
+    <div class="application-details">
+        <div class="detail-row">
+            <span class="detail-label">ID:</span>
+            <span class="detail-value">{{ application.id }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Applicant:</span>
+            <span class="detail-value">{{ application.applicant_name }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value status-{{ application.status.lower() }}">{{ application.status }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Prediction:</span>
+            <span class="detail-value prediction-{{ application.prediction.lower() }}">{{ application.prediction }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Confidence:</span>
+            <span class="detail-value">{{ (application.probability * 100)|round(2) }}%</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Loan Amount:</span>
+            <span class="detail-value">${{ application.loan_amount|round(2) }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Term:</span>
+            <span class="detail-value">{{ application.loan_amount_term }} months</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Credit History:</span>
+            <span class="detail-value">{{ application.credit_history }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">{{ application.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+    </div>
+    
+    <div class="form-section">
+        <h3>Update Application Status</h3>
+        <form method="post" action="/admin/application/{{ application.id }}/update">
+            <div class="form-group">
+                <select name="status" required>
+                    <option value="Pending" {% if application.status == "Pending" %}selected{% endif %}>Pending</option>
+                    <option value="Approved" {% if application.status == "Approved" %}selected{% endif %}>Approved</option>
+                    <option value="Rejected" {% if application.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Update Status</button>
+        </form>
+    </div>
+    
+    <div class="actions">
+        <a href="/admin/dashboard" class="btn secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
