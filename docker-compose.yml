@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+      - data-volume:/data
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////data/loan_app.db
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=securepassword
+      - SECRET_KEY=your-secret-key
+    command: >
+      sh -c "python -c 'from app.database import create_tables; create_tables()' &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  data-volume:
