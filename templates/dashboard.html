@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Admin Dashboard</h2>
+    
+    <!-- Model metrics summary -->
+    <div class="metrics-summary">
+        <div class="metric-badge">
+            <span class="metric-label">Best Model F1:</span>
+            <span class="metric-value">{{ (metrics.f1_score * 100)|round(1) }}%</span>
+        </div>
+        <div class="metric-badge">
+            <span class="metric-label">RF Model F1:</span>
+            <span class="metric-value">{{ (metrics.rf_f1 * 100)|round(1) }}%</span>
+        </div>
+        <div class="metric-badge">
+            <span class="metric-label">Updated:</span>
+            <span class="metric-value">{{ metrics.last_updated.strftime('%Y-%m-%d') }}</span>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Total Applications</h3>
+            <p>{{ applications|length }}</p>
+        </div>
+        <div class="stat-card approved">
+            <h3>Approved</h3>
+            <p>{{ applications|selectattr('prediction', 'equalto', 'Approved')|list|length }}</p>
+        </div>
+        <div class="stat-card rejected">
+            <h3>Rejected</h3>
+            <p>{{ applications|selectattr('prediction', 'equalto', 'Rejected')|list|length }}</p>
+        </div>
+    </div>
+    
+    <table class="applications-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Applicant</th>
+                <th>Loan Amount</th>
+                <th>Status</th>
+                <th>Prediction</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.id }}</td>
+                <td>{{ app.applicant_name }}</td>
+                <td>${{ app.loan_amount|round(2) }}</td>
+                <td class="status-{{ app.status.lower() }}">{{ app.status }}</td>
+                <td class="prediction-{{ app.prediction.lower() }}">{{ app.prediction }}</td>
+                <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                <td class="actions">
+                    <a href="/admin/application/{{ app.id }}" class="btn small">View</a>
+                    <a href="/admin/application/{{ app.id }}/delete" class="btn small danger" 
+                       onclick="return confirm('Are you sure you want to delete this application?');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
